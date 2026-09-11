@@ -3,10 +3,9 @@ using UnityEngine.InputSystem;
 
 public class SquareSpawner : MonoBehaviour
 {
-    
-    //float scroll = Mouse.current.scroll.ReadValue().y;
-    //Debug.Log(scroll);
-    
+
+    float size = 1;// size value for the squares
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,7 +16,6 @@ public class SquareSpawner : MonoBehaviour
     void Update()
     {
         SquareFollow();
-       
     }
 
     void SquareFollow() // Fuction to draw a square tha follows the mouse
@@ -26,9 +24,9 @@ public class SquareSpawner : MonoBehaviour
         // Read mouse cordinates and translate
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         transform.position = mousePos;
-        int size = 1;
 
         // Coordinates for the 4 corners of the square
+        // size moves the vector point in the correct direction to make the square bigger or smaller
         Vector2 topL = new Vector2(mousePos.x - size, mousePos.y + size);
         Vector2 topR = new Vector2(mousePos.x + size, mousePos.y + size);
         Vector2 bottomL = new Vector2(mousePos.x - size, mousePos.y - size);
@@ -51,7 +49,6 @@ public class SquareSpawner : MonoBehaviour
             // Read mouse cordinates and translate
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             transform.position = mousePos;
-            int size = 1;
 
             // Coordinates for the 4 corners of the square
             Vector2 topL = new Vector2(mousePos.x - size, mousePos.y + size);
@@ -68,8 +65,10 @@ public class SquareSpawner : MonoBehaviour
         }
 
     }
-    public void OnScroll(InputAction.CallbackContext context)
+    public void OnScroll(InputAction.CallbackContext context) //Fuction that changes the size of the square with the mouse scroll
     {
+        Vector2 scrollValue = context.ReadValue<Vector2>(); //Reads the scroll value 
+        size += scrollValue.y;// Increases the size value based on the scroll value
 
     }
 }
