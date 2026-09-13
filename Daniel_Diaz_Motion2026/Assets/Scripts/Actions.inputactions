@@ -51,6 +51,35 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Draw",
+            "id": "23747738-681d-4d01-8d08-289f9d07bc2d",
+            "actions": [
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "71a3b49a-8eef-4485-8273-b46be35c30ec",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2d6d80bc-b64b-4a46-b9e7-14534197e894",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
