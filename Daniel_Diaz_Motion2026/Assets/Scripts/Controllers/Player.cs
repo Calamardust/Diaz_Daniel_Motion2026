@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +13,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        DetectAsteroids(1.5f, asteroidTransforms);// calls the detect asteroids function with a max range of 1.5 and the list of asteroid transforms
+
         if (Keyboard.current.spaceKey.wasPressedThisFrame)// normalizes a vector and prints it to the console (done in class)
         {
             Debug.Log("Normalized Vector: " + Normalizer(new Vector2(-3, 2)));
@@ -35,6 +36,11 @@ public class Player : MonoBehaviour
         {
            WarpPlayer(enemyTransform, 0.5f);// calls the warp function and move the player towards the nearest enemy with a ratio betwen 0 and 1 (0.5)
         }
+    }
+
+    public static Vector2 Normalizer(Vector2 normalized)// normalizes a vector and prints it to the console (done in class)
+    {
+        return normalized.normalized;// returns the noramlized vector
     }
 
     public void SpawnBombAtOffset(Vector3 inOffset)// spawns a bomb at the player position with an offset
@@ -61,12 +67,6 @@ public class Player : MonoBehaviour
         Instantiate(bombPrefab, playerPost.position + (Vector3)randomCorner, Quaternion.identity); // spawns the bomb at the random corner 
     }
 
-
-    public static Vector2 Normalizer(Vector2 normalized)// normalizes a vector and prints it to the console (done in class)
-    {
-        return normalized.normalized;// returns the noramlized vector
-    }
-
     public void WarpPlayer(Transform target, float ratio)// warps the player towards a target position based on a ratio
     {
         Vector3 startingPoint = playerPost.position;// stores the starting position of the player
@@ -75,5 +75,17 @@ public class Player : MonoBehaviour
         playerPost.position = Vector3.Lerp(startingPoint, finalPoint, ratio); // moves the player towards the enemy position based on the ratio
     }
 
+    public void DetectAsteroids(float inMaxRange, List<Transform> inAsteroids)
+    {
+        foreach (Transform asteroid in inAsteroids)// iterates through the list of asteroids 
+        {
+            if (Vector3.Distance(playerPost.position, asteroid.position) < inMaxRange)// if the distance between the player and the asteroid is less than the max range
+            {
+                Vector2 normalizedDirection = Normalizer(asteroid.position - playerPost.position) * 2.5f;// normalizes the vector between the player and the asteroid and multiples it by 2.5 
+
+                Debug.DrawLine(playerPost.position, playerPost.position + (Vector3)normalizedDirection, Color.green);// draws a green line to the asteroid if it is within range
+            }
+        }
+    }
 
 }
