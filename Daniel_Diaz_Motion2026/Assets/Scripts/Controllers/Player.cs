@@ -11,9 +11,30 @@ public class Player : MonoBehaviour
 
     public Transform playerPost;// player position
 
+    public Vector3 currentVelocity = Vector3.zero;// starting velocity
+
+
+    public float MaxSpeed;
+
+    public float accelerationTime;
+    public float decelerationTime;
+
+    public float currentAcceleration;
+
+    public float currentDecceleration;
+
+
+    private void Start()
+    {
+        currentAcceleration = MaxSpeed / accelerationTime;
+        currentDecceleration = MaxSpeed / decelerationTime;
+    }
+
     void Update()
     {
         DetectAsteroids(1.5f, asteroidTransforms);// calls the detect asteroids function with a max range of 1.5 and the list of asteroid transforms
+
+        PlayerMovement();
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)// normalizes a vector and prints it to the console (done in class)
         {
@@ -86,6 +107,46 @@ public class Player : MonoBehaviour
                 Debug.DrawLine(playerPost.position, playerPost.position + (Vector3)normalizedDirection, Color.green);// draws a green line to the asteroid if it is within range
             }
         }
+    }
+    void PlayerMovement()
+    {
+        Vector3 accelerationDirection = Vector3.zero;
+
+        if (Keyboard.current.leftArrowKey.isPressed)
+        {
+            accelerationDirection += Vector3.left;
+        }
+        if (Keyboard.current.rightArrowKey.isPressed)
+        {
+            accelerationDirection += Vector3.right;
+        }
+        if (Keyboard.current.upArrowKey.isPressed)
+        {
+            accelerationDirection += Vector3.up;
+        }
+        if (Keyboard.current.downArrowKey.isPressed)
+        {
+            accelerationDirection += Vector3.down;
+        }
+
+        //ACCELERATION DIRECTION REPRESENTS THE DIRECTION WE ARE ACCELERATING
+        //WE NORMALIZE IT 
+        //AND THEN SET THE AMOUNT TO ACCELERATE BY:
+        currentVelocity += accelerationDirection.normalized * currentAcceleration * Time.deltaTime;
+
+        if (!Keyboard.current.leftArrowKey.isPressed && !Keyboard.current.rightArrowKey.isPressed && !Keyboard.current.upArrowKey.isPressed && !Keyboard.current.downArrowKey.isPressed)
+        {
+            currentVelocity += accelerationDirection.normalized * currentDecceleration * Time.deltaTime; // aceleration is 0 so it dosent work get the last acc
+            Debug.Log(currentVelocity);
+        }
+
+        if (currentVelocity.magnitude > MaxSpeed)
+        {
+            currentVelocity = currentVelocity.normalized * MaxSpeed;
+        }
+
+        transform.position += currentVelocity * Time.deltaTime;
+
     }
 
 }

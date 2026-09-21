@@ -10,5 +10,15 @@ public class Stars : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 starPoint = starTransforms[0].position;
+
+
+
+
+
+        //foreach(Transform starTransform in starTransforms)
+        //{
+
+        //}
     }
 }
