@@ -13,20 +13,22 @@ public class Player : MonoBehaviour
 
     public Vector3 currentVelocity = Vector3.zero;// starting velocity
 
+    public float MaxSpeed; // Max possible speed
+    public float MinSpeed; // Min possible speed before setting it to 0
 
-    public float MaxSpeed;
+    public float accelerationTime; //Time it takes to accelerate
 
-    public float accelerationTime;
-    public float decelerationTime;
+    public float decelerationTime; // Time it takes to decelerate
 
-    public float currentAcceleration;
+    public float currentAcceleration; // Acceleration value
 
-    public float currentDecceleration;
+    public float currentDecceleration; // Deceleration value
 
 
     private void Start()
     {
-        currentAcceleration = MaxSpeed / accelerationTime;
+        // Calculates the values of acceleration and deceleration 
+        currentAcceleration = MaxSpeed / accelerationTime;  
         currentDecceleration = MaxSpeed / decelerationTime;
     }
 
@@ -108,9 +110,10 @@ public class Player : MonoBehaviour
             }
         }
     }
-    void PlayerMovement()
+    void PlayerMovement()// controls the player input over the ship
+
     {
-        Vector3 accelerationDirection = Vector3.zero;
+        Vector3 accelerationDirection = Vector3.zero; // = 0 when no player input is detected
 
         if (Keyboard.current.leftArrowKey.isPressed)
         {
@@ -134,18 +137,23 @@ public class Player : MonoBehaviour
         //AND THEN SET THE AMOUNT TO ACCELERATE BY:
         currentVelocity += accelerationDirection.normalized * currentAcceleration * Time.deltaTime;
 
-        if (!Keyboard.current.leftArrowKey.isPressed && !Keyboard.current.rightArrowKey.isPressed && !Keyboard.current.upArrowKey.isPressed && !Keyboard.current.downArrowKey.isPressed)
+        // if no input is being given
+        if (!Keyboard.current.leftArrowKey.isPressed && !Keyboard.current.rightArrowKey.isPressed && !Keyboard.current.upArrowKey.isPressed && !Keyboard.current.downArrowKey.isPressed) 
         {
-            currentVelocity += accelerationDirection.normalized * currentDecceleration * Time.deltaTime; // aceleration is 0 so it dosent work get the last acc
-            Debug.Log(currentVelocity);
+            currentVelocity -= currentVelocity * currentDecceleration * Time.deltaTime;// velocity reduces over time
+
+            if (currentVelocity.magnitude <= MinSpeed)
+            {
+                currentVelocity = Vector3.zero;// sets the velocity to 0 so it doesn't go crazy with decimals
+            }
         }
 
         if (currentVelocity.magnitude > MaxSpeed)
         {
-            currentVelocity = currentVelocity.normalized * MaxSpeed;
+            currentVelocity = currentVelocity.normalized * MaxSpeed;// equalizes the velocity to the max velocity
         }
 
-        transform.position += currentVelocity * Time.deltaTime;
+        transform.position += currentVelocity * Time.deltaTime;// changes the position of the ship over time based on the velocity
 
     }
 
