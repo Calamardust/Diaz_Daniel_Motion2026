@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
         {
             SpawnBombOnRandomCorner(1f);// calls the random corner spawn function with a certain distance 
         }
-        if (Mouse.current.leftButton.wasPressedThisFrame)// warps the player when the left mouse button is pressed
+        if (Keyboard.current.qKey.wasPressedThisFrame)// warps the player when the q button is pressed
         {
            WarpPlayer(enemyTransform, 0.5f);// calls the warp function and move the player towards the nearest enemy with a ratio betwen 0 and 1 (0.5)
         }
