@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-    void PlayerMovement()// controls the player input over the ship
+    public void PlayerMovement()// controls the player input over the ship
 
     {
         Vector3 accelerationDirection = Vector3.zero; // = 0 when no player input is detected
