@@ -11,9 +11,32 @@ public class Player : MonoBehaviour
 
     public Transform playerPost;// player position
 
+    public Vector3 currentVelocity = Vector3.zero;// starting velocity
+
+    public float MaxSpeed; // Max possible speed
+    public float MinSpeed; // Min possible speed before setting it to 0
+
+    public float accelerationTime; //Time it takes to accelerate
+
+    public float decelerationTime; // Time it takes to decelerate
+
+    public float currentAcceleration; // Acceleration value
+
+    public float currentDecceleration; // Deceleration value
+
+
+    private void Start()
+    {
+        // Calculates the values of acceleration and deceleration 
+        currentAcceleration = MaxSpeed / accelerationTime;  
+        currentDecceleration = MaxSpeed / decelerationTime;
+    }
+
     void Update()
     {
         DetectAsteroids(1.5f, asteroidTransforms);// calls the detect asteroids function with a max range of 1.5 and the list of asteroid transforms
+
+        PlayerMovement();
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)// normalizes a vector and prints it to the console (done in class)
         {
@@ -32,7 +55,7 @@ public class Player : MonoBehaviour
         {
             SpawnBombOnRandomCorner(1f);// calls the random corner spawn function with a certain distance 
         }
-        if (Mouse.current.leftButton.wasPressedThisFrame)// warps the player when the left mouse button is pressed
+        if (Keyboard.current.qKey.wasPressedThisFrame)// warps the player when the q button is pressed
         {
            WarpPlayer(enemyTransform, 0.5f);// calls the warp function and move the player towards the nearest enemy with a ratio betwen 0 and 1 (0.5)
         }
@@ -86,6 +109,52 @@ public class Player : MonoBehaviour
                 Debug.DrawLine(playerPost.position, playerPost.position + (Vector3)normalizedDirection, Color.green);// draws a green line to the asteroid if it is within range
             }
         }
+    }
+    public void PlayerMovement()// controls the player input over the ship
+
+    {
+        Vector3 accelerationDirection = Vector3.zero; // = 0 when no player input is detected
+
+        if (Keyboard.current.leftArrowKey.isPressed)
+        {
+            accelerationDirection += Vector3.left;
+        }
+        if (Keyboard.current.rightArrowKey.isPressed)
+        {
+            accelerationDirection += Vector3.right;
+        }
+        if (Keyboard.current.upArrowKey.isPressed)
+        {
+            accelerationDirection += Vector3.up;
+        }
+        if (Keyboard.current.downArrowKey.isPressed)
+        {
+            accelerationDirection += Vector3.down;
+        }
+
+        //ACCELERATION DIRECTION REPRESENTS THE DIRECTION WE ARE ACCELERATING
+        //WE NORMALIZE IT 
+        //AND THEN SET THE AMOUNT TO ACCELERATE BY:
+        currentVelocity += accelerationDirection.normalized * currentAcceleration * Time.deltaTime;
+
+        // if no input is being given
+        if (!Keyboard.current.leftArrowKey.isPressed && !Keyboard.current.rightArrowKey.isPressed && !Keyboard.current.upArrowKey.isPressed && !Keyboard.current.downArrowKey.isPressed) 
+        {
+            currentVelocity -= currentVelocity * currentDecceleration * Time.deltaTime;// velocity reduces over time
+
+            if (currentVelocity.magnitude <= MinSpeed)
+            {
+                currentVelocity = Vector3.zero;// sets the velocity to 0 so it doesn't go crazy with decimals
+            }
+        }
+
+        if (currentVelocity.magnitude > MaxSpeed)
+        {
+            currentVelocity = currentVelocity.normalized * MaxSpeed;// equalizes the velocity to the max velocity
+        }
+
+        transform.position += currentVelocity * Time.deltaTime;// changes the position of the ship over time based on the velocity
+
     }
 
 }
