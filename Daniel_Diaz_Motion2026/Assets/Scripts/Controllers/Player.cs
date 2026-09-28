@@ -8,11 +8,9 @@ public class Player : MonoBehaviour
     public Transform enemyTransform;// enemy position
     public GameObject bombPrefab;// bomb prefab reference
     public Transform bombsTransform;// parent transform for bombs
-
     public Transform playerPost;// player position
 
     public Vector3 currentVelocity = Vector3.zero;// starting velocity
-
     public float MaxSpeed; // Max possible speed
     public float MinSpeed; // Min possible speed before setting it to 0
 
