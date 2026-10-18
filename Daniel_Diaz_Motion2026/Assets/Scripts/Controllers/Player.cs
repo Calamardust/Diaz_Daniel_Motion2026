@@ -34,7 +34,9 @@ public class Player : MonoBehaviour
     {
         DetectAsteroids(1.5f, asteroidTransforms);// calls the detect asteroids function with a max range of 1.5 and the list of asteroid transforms
 
-        PlayerMovement();
+        PlayerMovement();// Moves the player based on the input from the keyboard
+
+        PlayerDirection();// Rotates the player based on the mouse position
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)// normalizes a vector and prints it to the console (done in class)
         {
@@ -155,4 +157,12 @@ public class Player : MonoBehaviour
 
     }
 
+    public void PlayerDirection() // chnages the direction of the player based on the mouse position
+    {
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+
+        Vector3 directionToMouse = (mousePosition - transform.position).normalized;
+
+        transform.eulerAngles = new Vector3(0, 0, Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg - 90f);
+    }
 }
